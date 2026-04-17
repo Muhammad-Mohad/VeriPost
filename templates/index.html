@@ -9,6 +9,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -20,26 +22,62 @@
     </header>
 
     <main class="main-card">
-        <textarea id="newsInput" placeholder="Paste a news headline or full article text here to verify its authenticity..."></textarea>
+        <div class="upload-section">
+            <button type="button" class="secondary-btn" onclick="document.getElementById('imageInput').click()">
+                Upload Image of News
+            </button>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImage(this)">
+            <div id="ocrStatus"></div>
+        </div>
+
+        <textarea id="newsInput" placeholder="Paste a news headline or use the image uploader above..."></textarea>
         
-        <button onclick="checkNews()">Analyze Validity</button>
+        <button class="primary-btn" onclick="checkNews()">Analyze Validity</button>
         
-        <div id="result">
-            </div>
+        <div id="result"></div>
     </main>
 
     <footer>
-        &copy; 2026 VeriPost Integrity Systems.
+        &copy; 2026 VeriPost Integrity Systems
     </footer>
 </div>
 
 <script>
+    async function handleImage(input) {
+        const file = input.files[0];
+        const status = document.getElementById('ocrStatus');
+        const textArea = document.getElementById('newsInput');
+        
+        if (!file) return;
+
+        status.innerHTML = "Initializing OCR engine...";
+        textArea.value = "";
+        textArea.placeholder = "Reading text from image... please wait.";
+
+        try {
+            const result = await Tesseract.recognize(file, 'eng', {
+                logger: m => {
+                    if(m.status === 'recognizing text') {
+                        status.innerHTML = `Scanning Image: ${Math.round(m.progress * 100)}%`;
+                    }
+                }
+            });
+            
+            textArea.value = result.data.text.trim();
+            status.innerHTML = "✅ Text extracted successfully!";
+            textArea.placeholder = "Paste a news headline...";
+        } catch (e) {
+            status.innerHTML = "❌ Error reading image. Ensure text is clear.";
+            console.error(e);
+        }
+    }
+
     async function checkNews() {
         const text = document.getElementById('newsInput').value;
         const resultDiv = document.getElementById('result');
         
         if (!text.trim()) {
-            resultDiv.innerHTML = "<span style='color: #94a3b8;'>Please enter some text to begin.</span>";
+            resultDiv.innerHTML = "<span style='color: #94a3b8;'>Please enter or extract some text first.</span>";
             return;
         }
 
@@ -63,7 +101,7 @@
                     <span class="confidence">Linguistic Confidence Score: ${data.confidence_score}</span>
                 `;
             } else {
-                resultDiv.innerHTML = "Error: Could not process request.";
+                resultDiv.innerHTML = "Error: Backend processing failed.";
             }
         } catch (error) {
             resultDiv.innerHTML = "Server error. Is the Flask backend running?";
