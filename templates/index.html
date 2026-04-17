@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriPost | AI News Validator</title>
+    
+    <link rel="icon" type="image/x-icon" href="https://via.placeholder.com/32x32.png?text=VP">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="page-wrapper">
+    <header>
+        <h1>VeriPost</h1>
+        <p class="subtitle">AI-Driven Linguistic Integrity Analysis</p>
+    </header>
+
+    <main class="main-card">
+        <textarea id="newsInput" placeholder="Paste a news headline or full article text here to verify its authenticity..."></textarea>
+        
+        <button onclick="checkNews()">Analyze Validity</button>
+        
+        <div id="result">
+            </div>
+    </main>
+
+    <footer>
+        &copy; 2026 VeriPost Integrity Systems.
+    </footer>
+</div>
+
+<script>
+    async function checkNews() {
+        const text = document.getElementById('newsInput').value;
+        const resultDiv = document.getElementById('result');
+        
+        if (!text.trim()) {
+            resultDiv.innerHTML = "<span style='color: #94a3b8;'>Please enter some text to begin.</span>";
+            return;
+        }
+
+        resultDiv.innerHTML = "<i>Analyzing linguistic patterns...</i>";
+
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+
+            const data = await response.json();
+
+            if (data.prediction) {
+                const statusClass = data.prediction.toUpperCase(); 
+                resultDiv.innerHTML = `
+                    <div class="prediction-box ${statusClass}">
+                        ${statusClass}
+                    </div>
+                    <span class="confidence">Linguistic Confidence Score: ${data.confidence_score}</span>
+                `;
+            } else {
+                resultDiv.innerHTML = "Error: Could not process request.";
+            }
+        } catch (error) {
+            resultDiv.innerHTML = "Server error. Is the Flask backend running?";
+        }
+    }
+</script>
+
+</body>
+</html>
