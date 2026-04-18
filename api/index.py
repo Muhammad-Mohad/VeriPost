@@ -1,7 +1,9 @@
 from flask import Flask, request, render_template, jsonify
 import pickle
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder='../templates', 
+            static_folder='../static')
 
 try:
     model = pickle.load(open('models/model.pkl', 'rb'))
@@ -35,4 +37,4 @@ def predict():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
