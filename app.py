@@ -6,9 +6,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(BASE_DIR, '..', 'models', 'model.pkl')
 vectorizer_path = os.path.join(BASE_DIR, '..', 'models', 'tfidfvectorizer.pkl')
 
-app = Flask(__name__, 
-            template_folder='../templates', 
-            static_folder='../static')
+app = Flask(__name__)
 
 try:
     model = pickle.load(open(model_path, 'rb'))
@@ -42,4 +40,4 @@ def predict():
     })
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
