@@ -53,7 +53,7 @@ export const BatchTable = ({ rows }: { rows: BatchRow[] }) => {
         <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] text-[11px] uppercase tracking-widest text-ink-dim bg-bg-soft/40 px-4 py-2.5 border-b border-border">
           <span className="w-16">#</span>
           <span>Snippet</span>
-          <span className="w-32 text-right">Real prob.</span>
+          <span className="w-32 text-right">Confidence</span>
         </div>
         <div className="max-h-[480px] overflow-y-auto scrollbar-thin divide-y divide-border">
           {filtered.length === 0 ? (
@@ -74,7 +74,7 @@ export const BatchTable = ({ rows }: { rows: BatchRow[] }) => {
                     {r.prediction}
                   </Badge>
                   <span className="text-xs text-ink-muted font-mono">
-                    {r.real_probability.toFixed(0)}%
+                    {r.confidence.toFixed(0)}%
                   </span>
                 </span>
               </div>
