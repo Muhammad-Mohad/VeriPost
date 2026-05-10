@@ -19,26 +19,51 @@
     </header>
 
     <main class="main-card">
-        <div class="upload-section">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="text">Text</button>
+            <button class="tab-btn" data-tab="image">Image</button>
+            <button class="tab-btn" data-tab="url">URL</button>
+            <button class="tab-btn" data-tab="batch">Batch CSV</button>
+        </div>
+
+        <section class="tab-panel active" id="tab-text">
+            <textarea id="newsInput" maxlength="50000" placeholder="Paste a news headline or article..."></textarea>
+            <div class="row between">
+                <span id="charCount" class="hint">0 / 50000</span>
+                <label class="hint"><input type="checkbox" id="sentenceMode"> Sentence-level breakdown</label>
+            </div>
+            <button class="primary-btn" onclick="checkNews()">Analyze Validity</button>
+        </section>
+
+        <section class="tab-panel" id="tab-image">
             <button type="button" class="secondary-btn" onclick="document.getElementById('imageInput').click()">
                 Upload Image of News
             </button>
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImage(this)">
             <div id="ocrStatus"></div>
-        </div>
+            <p class="hint">Extracted text appears in the Text tab.</p>
+        </section>
 
-        <textarea id="newsInput" placeholder="Paste a news headline or use the image uploader above..."></textarea>
-        
-        <button class="primary-btn" onclick="checkNews()">Analyze Validity</button>
-        
+        <section class="tab-panel" id="tab-url">
+            <input type="url" id="urlInput" placeholder="https://example.com/news-article" />
+            <label class="hint"><input type="checkbox" id="urlSentenceMode"> Sentence-level breakdown</label>
+            <button class="primary-btn" onclick="checkUrl()">Fetch &amp; Analyze</button>
+        </section>
+
+        <section class="tab-panel" id="tab-batch">
+            <p class="hint">Upload a CSV with a <code>text</code> column (optional <code>title</code>). Up to 500 rows.</p>
+            <input type="file" id="batchInput" accept=".csv" />
+            <button class="primary-btn" onclick="checkBatch()">Run Batch</button>
+            <div id="batchResult"></div>
+        </section>
+
         <div id="result"></div>
     </main>
 
     <footer>
-        &copy; 2026 VeriPost Integrity Systems
+        &copy; 2026 VeriPost Integrity Systems &middot; <a href="/admin">Admin</a>
     </footer>
 </div>
-
 
 </body>
 </html>

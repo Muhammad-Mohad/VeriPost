@@ -1,0 +1,9 @@
+{
+  "version": "v3-final",
+  "accuracy": 97.79,
+  "cv_mean": 97.23,
+  "trained_at": "2026-05-10T13:15:19.791594Z",
+  "intercept": 0.8350028389095789,
+  "n_features": 20000,
+  "n_samples": 71994
+}
