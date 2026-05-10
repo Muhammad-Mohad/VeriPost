@@ -3,8 +3,8 @@ import pickle
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(BASE_DIR, '..', 'models', 'model.pkl')
-vectorizer_path = os.path.join(BASE_DIR, '..', 'models', 'tfidfvectorizer.pkl')
+model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
+vectorizer_path = os.path.join(BASE_DIR, 'models', 'tfidfVectorizer.pkl')
 
 app = Flask(__name__)
 
@@ -15,6 +15,10 @@ except FileNotFoundError:
     print("Error: Model or Vectorizer files not found.")
 
 @app.route('/')
+def welcome():
+    return render_template('welcome.html')
+
+@app.route('/app')
 def index():
     return render_template('index.html')
 
