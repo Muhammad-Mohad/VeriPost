@@ -29,6 +29,13 @@ def clean_text(text):
 
 
 def train(dataset_path, models_dir, version_tag=None, extra_csv=None):
+    if not os.path.exists(dataset_path):
+        raise FileNotFoundError(
+            f"Dataset not found at {dataset_path}\n"
+            "Note: Model retraining only works on your local machine where the dataset is stored.\n"
+            "Retraining is not available on Render deployment."
+        )
+
     os.makedirs(models_dir, exist_ok=True)
     versions_dir = os.path.join(models_dir, 'versions')
     os.makedirs(versions_dir, exist_ok=True)

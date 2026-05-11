@@ -244,12 +244,15 @@ def predict_url():
     if not url or not (url.startswith('http://') or url.startswith('https://')):
         return jsonify({'error': 'Invalid URL'}), 400
 
-    downloaded = trafilatura.fetch_url(url)
-    if not downloaded:
-        return jsonify({'error': 'Could not fetch URL'}), 400
-    extracted = trafilatura.extract(downloaded, include_comments=False, include_tables=False)
-    if not extracted or len(extracted) < 50:
-        return jsonify({'error': 'Could not extract enough text from page'}), 400
+    try:
+        downloaded = trafilatura.fetch_url(url)
+        if not downloaded:
+            return jsonify({'error': 'Could not fetch URL. Check if the URL is valid and accessible.'}), 400
+        extracted = trafilatura.extract(downloaded, include_comments=False, include_tables=False)
+        if not extracted or len(extracted) < 50:
+            return jsonify({'error': 'Could not extract text from page. Ensure the URL points to an article with at least 50 characters of text (not an image or document).'}), 400
+    except Exception as e:
+        return jsonify({'error': f'Failed to process URL: {str(e)[:100]}'}), 400
 
     extracted = extracted[:MAX_TEXT_LEN]
 
