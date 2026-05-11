@@ -8,17 +8,15 @@ import { Banner } from '@/components/ui/Banner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { TextAnalyzer } from '@/components/analyze/TextAnalyzer';
 import { ImageAnalyzer } from '@/components/analyze/ImageAnalyzer';
-import { UrlAnalyzer } from '@/components/analyze/UrlAnalyzer';
 import { ResultPanel } from '@/components/analyze/ResultPanel';
-import { FileText, ImageIcon, Globe, ScanSearch } from 'lucide-react';
+import { FileText, ImageIcon, ScanSearch } from 'lucide-react';
 import type { PredictionResult } from '@/lib/types';
 
-type Mode = 'text' | 'image' | 'url';
+type Mode = 'text' | 'image';
 
 const TABS: TabItem<Mode>[] = [
   { key: 'text', label: 'Text', icon: <FileText size={14} /> },
   { key: 'image', label: 'Image', icon: <ImageIcon size={14} /> },
-  { key: 'url', label: 'URL', icon: <Globe size={14} /> },
 ];
 
 export default function AnalyzePage() {
@@ -48,22 +46,21 @@ export default function AnalyzePage() {
       <PageHeader
         eyebrow="Analyze"
         title="Single-post integrity check"
-        description="Choose a source — paste text, upload an image, or fetch a URL — and get a calibrated verdict with explainability."
+        description="Paste text or upload an image. Get a calibrated verdict with explanation."
       />
 
       <Card>
         <CardHeader title="Input source" icon={<ScanSearch size={16} />} />
         <CardBody className="space-y-5">
           <Tabs tabs={TABS} active={mode} onChange={setMode} />
-          {mode === 'text' ? (
+          {mode === 'text' && (
             <TextAnalyzer
               initialText={extractedText}
               onResult={handleResult}
               onError={handleError}
             />
-          ) : null}
-          {mode === 'image' ? <ImageAnalyzer onText={switchToText} /> : null}
-          {mode === 'url' ? <UrlAnalyzer onResult={handleResult} onError={handleError} /> : null}
+          )}
+          {mode === 'image' && <ImageAnalyzer onText={switchToText} />}
         </CardBody>
       </Card>
 

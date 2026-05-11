@@ -15,11 +15,6 @@ from flask_limiter.util import get_remote_address
 from nlp_utils import clean_text, split_sentences, explain
 
 try:
-    import trafilatura
-except Exception:
-    trafilatura = None
-
-try:
     from langdetect import detect, DetectorFactory
     DetectorFactory.seed = 0
 except Exception:
@@ -232,40 +227,6 @@ def predict():
             response['sentences'] = []
 
     return jsonify(response)
-
-
-@app.route('/predict-url', methods=['POST'])
-@limiter.limit('20 per minute')
-def predict_url():
-    if trafilatura is None:
-        return jsonify({'error': 'trafilatura not installed on server'}), 500
-    data = request.get_json(silent=True) or {}
-    url = (data.get('url') or '').strip()
-    if not url or not (url.startswith('http://') or url.startswith('https://')):
-        return jsonify({'error': 'Invalid URL'}), 400
-
-    try:
-        downloaded = trafilatura.fetch_url(url)
-        if not downloaded:
-            return jsonify({'error': 'Could not fetch URL. Check if the URL is valid and accessible.'}), 400
-        extracted = trafilatura.extract(downloaded, include_comments=False, include_tables=False)
-        if not extracted or len(extracted) < 50:
-            return jsonify({'error': 'Could not extract text from page. Ensure the URL points to an article with at least 50 characters of text (not an image or document).'}), 400
-    except Exception as e:
-        return jsonify({'error': f'Failed to process URL: {str(e)[:100]}'}), 400
-
-    extracted = extracted[:MAX_TEXT_LEN]
-
-    with app.test_request_context(
-        '/predict',
-        method='POST',
-        json={'text': extracted, 'explain': True, 'sentences': bool(data.get('sentences', False))},
-    ):
-        resp = predict()
-    payload = resp.get_json()
-    payload['extracted_text'] = extracted
-    payload['source_url'] = url
-    return jsonify(payload)
 
 
 @app.route('/predict-batch', methods=['POST'])

@@ -23,13 +23,6 @@ export const api = {
       body: JSON.stringify({ text, explain: false, ...opts }),
     }).then((r) => json<PredictionResult>(r)),
 
-  predictUrl: (url: string, sentences = false) =>
-    fetch('/api/predict-url', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, sentences }),
-    }).then((r) => json<PredictionResult>(r)),
-
   predictBatch: (file: File) => {
     const fd = new FormData();
     fd.append('file', file);
