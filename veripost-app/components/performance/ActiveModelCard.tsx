@@ -5,7 +5,7 @@ import { CircuitBoard, Calendar } from 'lucide-react';
 import { formatDate, formatNumber } from '@/lib/format';
 import type { ModelMeta } from '@/lib/types';
 
-const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
+const Row = ({ label, value }: { label: React.ReactNode; value: React.ReactNode }) => (
   <div className="flex items-center justify-between text-sm py-2 border-b border-border last:border-0">
     <span className="text-ink-muted">{label}</span>
     <span className="font-medium text-ink">{value}</span>
