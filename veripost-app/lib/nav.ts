@@ -3,7 +3,6 @@ import {
   ScanSearch,
   FileSpreadsheet,
   Activity,
-  Settings,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -38,11 +37,5 @@ export const NAV_ROUTES: NavRoute[] = [
     label: 'Check Model Performance',
     icon: Activity,
     description: 'Accuracy & versions',
-  },
-  {
-    href: '/admin',
-    label: 'Admin',
-    icon: Settings,
-    description: 'Retrain & manage',
   },
 ];
