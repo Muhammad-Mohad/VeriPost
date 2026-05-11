@@ -326,8 +326,6 @@ def _check_admin():
 
 @app.route('/admin/versions', methods=['GET'])
 def list_versions():
-    if not _check_admin():
-        return jsonify({'error': 'Unauthorized'}), 401
     vdir = os.path.join(MODELS_DIR, 'versions')
     versions = []
     if os.path.isdir(vdir):
@@ -396,8 +394,6 @@ def retrain():
 
 @app.route('/admin/train-status', methods=['GET'])
 def train_status():
-    if not _check_admin():
-        return jsonify({'error': 'Unauthorized'}), 401
     return jsonify(_train_status)
 
 
