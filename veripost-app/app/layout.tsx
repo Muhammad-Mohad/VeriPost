@@ -5,6 +5,9 @@ import { AppShell } from '@/components/layout/AppShell';
 export const metadata: Metadata = {
   title: 'VeriPost · AI Integrity Engine',
   description: 'Detect fake news with explainable machine learning.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
