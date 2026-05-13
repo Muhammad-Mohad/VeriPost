@@ -139,7 +139,7 @@ def predict_batch(texts):
     else:
         margins = model.decision_function(X)
         real_p = 1.0 / (1.0 + np.exp(margins))
-    labels = np.where(real_p >= 0.5, 'REAL', 'FAKE')
+    labels = np.where(real_p >= 0.5, 'FAKE', 'REAL')
     confidences = np.maximum(real_p, 1 - real_p)
     return labels, real_p, confidences
 
