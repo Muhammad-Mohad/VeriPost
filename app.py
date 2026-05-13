@@ -118,7 +118,7 @@ def _self_test():
         'refuses to cover this bombshell wake up sheeple share before deleted'
     )
     labels, real_p, _ = predict_batch([real_probe, fake_probe])
-    ok = labels[1] == 'REAL' and labels[0] == 'FAKE'
+    ok = labels[0] == 'REAL' and labels[1] == 'FAKE'
     status = 'PASS' if ok else 'FAIL'
     print(f'[self-test] {status}  real_probe -> {labels[0]} ({real_p[0]:.2f})  fake_probe -> {labels[1]} ({real_p[1]:.2f})')
     if not ok:
@@ -134,12 +134,12 @@ def predict_batch(texts):
     if hasattr(model, 'predict_proba'):
         probs = model.predict_proba(X)
         classes = model.classes_
-        real_idx = int(np.where(classes == 0)[0][0])
+        real_idx = int(np.where(classes == 1)[0][0])
         real_p = probs[:, real_idx]
     else:
         margins = model.decision_function(X)
         real_p = 1.0 / (1.0 + np.exp(margins))
-    labels = np.where(real_p >= 0.5, 'FAKE', 'REAL')
+    labels = np.where(real_p >= 0.5, 'REAL', 'FAKE')
     confidences = np.maximum(real_p, 1 - real_p)
     return labels, real_p, confidences
 
