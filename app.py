@@ -118,7 +118,7 @@ def _self_test():
         'refuses to cover this bombshell wake up sheeple share before deleted'
     )
     labels, real_p, _ = predict_batch([real_probe, fake_probe])
-    ok = labels[0] == 'REAL' and labels[1] == 'FAKE'
+    ok = labels[1] == 'REAL' and labels[0] == 'FAKE'
     status = 'PASS' if ok else 'FAIL'
     print(f'[self-test] {status}  real_probe -> {labels[0]} ({real_p[0]:.2f})  fake_probe -> {labels[1]} ({real_p[1]:.2f})')
     if not ok:
